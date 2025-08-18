@@ -2,13 +2,9 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@apollo/client';
-import { LOGIN_USER } from '@/graphql/mutations/loginUser';
-
-type User = { id: string; email: string } | null;
+import { useLoginUserMutation } from '@/graphql/generated';
 
 interface AuthContextType {
-  user: User;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -17,27 +13,22 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User>(null);
   const [token, setToken] = useState<string | null>(null);
-  const [loginMutation] = useMutation(LOGIN_USER);
+  const [loginUserMutation] = useLoginUserMutation();
   const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem('auth-token');
-    const storedUser = localStorage.getItem('auth-user');
     if (storedToken) setToken(storedToken);
-    if (storedUser) setUser(JSON.parse(storedUser));
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      const { data } = await loginMutation({ variables: { email, password } });
+      const { data } = await loginUserMutation({ variables: { email, password } });
       if (data?.loginUser?.token) {
-        const { token, user } = data.loginUser;
+        const token = data.loginUser.token;
         setToken(token);
-        setUser(user);
         localStorage.setItem('auth-token', token);
-        localStorage.setItem('auth-user', JSON.stringify(user));
         router.push('/pilot');
       } else {
         alert('Invalid login response');
@@ -49,16 +40,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = () => {
-    setUser(null);
     setToken(null);
     localStorage.removeItem('auth-token');
     localStorage.removeItem('auth-user');
     router.push('/login');
   };
 
-  return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ token, login, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

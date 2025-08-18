@@ -1,27 +1,24 @@
-// src/app/register/page.tsx
 'use client';
 
 import { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import { REGISTER_USER } from '@/graphql/mutations/registerUser';
 import { useRouter } from 'next/navigation';
+import { useRegisterUserMutation, Language, RegisterUserMutation } from '@/graphql/generated';
 
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [language, setLanguage] = useState<'EN' | 'PL'>('EN');
+  const [language, setLanguage] = useState<Language>(Language.English);
   const [terms, setTerms] = useState(false);
 
-  const [registerUser, { loading, error }] = useMutation(REGISTER_USER, {
-    onCompleted: (data) => {
-      if (data.registerUser.status) {
+  const [registerUser, { loading, error }] = useRegisterUserMutation({
+    onCompleted: (data: RegisterUserMutation) => {
+      if (data.registerUser?.status) {
         router.push('/login');
       }
     },
   });
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     registerUser({
@@ -59,11 +56,11 @@ export default function RegisterPage() {
         />
         <select
           value={language}
-          onChange={(e) => setLanguage(e.target.value as 'EN' | 'PL')}
+          onChange={(e) => setLanguage(e.target.value as Language)}
           className="w-full p-2 border rounded"
         >
-          <option value="EN">English</option>
-          <option value="PL">Polski</option>
+          <option value={Language.English}>English</option>
+          <option value={Language.Polish}>Polski</option>
         </select>
         <label className="flex items-center space-x-2">
           <input

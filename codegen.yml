@@ -1,0 +1,14 @@
+overwrite: true
+schema: 'https://dev.parkapp.pl/api/graphql'
+documents: 'src/graphql/**/*.ts'
+generates:
+  src/graphql/generated.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+      addDocBlocks: false
