@@ -31,7 +31,9 @@ export default function LoginPage() {
     <div className="w-full">
       <Header>
         <div className="flex pt-10">
-          <h1 className="text-[2rem] leading-[2.5rem] font-bold pl-5 pt-1">Logowanie</h1>
+          <h1 className="text-[2rem] font-poppins leading-[2.5rem] font-bold pl-5 pt-1">
+            Logowanie
+          </h1>
         </div>
       </Header>
       <form className="bg-white p-6 rounded-2xl space-y-4" onSubmit={handleSubmit}>
