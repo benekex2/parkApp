@@ -2,42 +2,62 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { Header } from '@/components/Header';
+import { Input } from '@/components/Input';
+import { InputEmail } from '@/components/InputEmail';
+import { Error } from '@/components/Error';
+import Link from 'next/link';
+import { validateEmail } from '@/utils/validation';
 
 export default function LoginPage() {
-  const { login } = useAuth();
-  const [email, setUsername] = useState('');
+  const { login, setError, error, loading } = useAuth();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateEmail(email)) {
+      setError('Please use correct formatting.\nExample: address@email.com');
+      return;
+    }
+    setError(null);
+    login(email, password);
+  };
+
   return (
-    <div className="flex h-screen items-center justify-center">
-      <form
-        className="bg-white p-6 rounded-2xl shadow-lg w-80 space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          login(email, password);
-        }}
-      >
-        <h1 className="text-xl font-bold">Login</h1>
-        <input
-          type="text"
-          placeholder="Email"
-          className="w-full p-2 border rounded"
+    <div className="w-full">
+      <Header>
+        <div className="flex pt-10">
+          <h1 className="text-[2rem] leading-[2.5rem] font-bold pl-5 pt-1">Logowanie</h1>
+        </div>
+      </Header>
+      <form className="bg-white p-6 rounded-2xl space-y-4" onSubmit={handleSubmit}>
+        <InputEmail
+          label="Email"
           value={email}
-          onChange={(e) => setUsername(e.target.value)}
+          error={error}
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <input
+        <Input
+          label="Password"
           type="password"
-          placeholder="Password"
-          className="w-full p-2 border rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <Error error={error} />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700"
+          disabled={loading}
+          className="w-full bg-primary m-0 text-white py-2 rounded-xl"
         >
-          Login
+          {loading ? 'Logging...' : 'Login'}
         </button>
+        <Link
+          href={'/register'}
+          className="w-full border border-primary text-primary py-2 rounded-xl text-center block mt-2 transition-colors hover:bg-primary hover:text-white"
+        >
+          Register
+        </Link>
       </form>
     </div>
   );

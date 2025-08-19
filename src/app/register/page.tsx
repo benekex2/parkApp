@@ -1,84 +1,83 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useRegisterUserMutation, Language, RegisterUserMutation } from '@/graphql/generated';
+import { Language } from '@/graphql/generated';
+import { useAuth } from '@/context/AuthContext';
+import { validateEmail } from '@/utils/validation';
+import { Header } from '@/components/Header';
+import { Error } from '@/components/Error';
+import { Input } from '@/components/Input';
+import { InputEmail } from '@/components/InputEmail';
+import Link from 'next/link';
+import { Select } from '@/components/Select';
+import { Checkbox } from '@/components/Checkbox';
 
 export default function RegisterPage() {
-  const router = useRouter();
+  const { register, setError, error, loading } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [language, setLanguage] = useState<Language>(Language.English);
   const [terms, setTerms] = useState(false);
 
-  const [registerUser, { loading, error }] = useRegisterUserMutation({
-    onCompleted: (data: RegisterUserMutation) => {
-      if (data.registerUser?.status) {
-        router.push('/login');
-      }
-    },
-  });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    registerUser({
-      variables: { name, email, password, language, terms },
-    });
+    if (!validateEmail(email)) {
+      setError('Please use correct formatting.\nExample: address@email.com');
+      return;
+    }
+    setError(null);
+    register(email, password, name, language, terms);
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 bg-white shadow rounded">
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="email"
-          placeholder="Email"
+    <div className="w-full">
+      <Header>
+        <div className="flex pt-10">
+          <h1 className="text-[2rem] leading-[2.5rem] font-bold pl-5 pt-1">Register</h1>
+        </div>
+      </Header>
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl space-y-4">
+        <Input label="Name" onChange={(e) => setName(e.target.value)} />
+        <InputEmail
+          label="Email"
           value={email}
+          error={error}
           onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full p-2 border rounded"
         />
-        <input
+        <Input
+          label="Password"
           type="password"
-          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full p-2 border rounded"
         />
-        <select
+        <Select
+          label="Language"
           value={language}
+          options={Object.values(Language)}
+          optionLabels={{ [Language.English]: 'English', [Language.Polish]: 'Polski' }}
           onChange={(e) => setLanguage(e.target.value as Language)}
-          className="w-full p-2 border rounded"
-        >
-          <option value={Language.English}>English</option>
-          <option value={Language.Polish}>Polski</option>
-        </select>
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={terms}
-            onChange={(e) => setTerms(e.target.checked)}
-            required
-          />
-          <span>Accept terms & conditions</span>
-        </label>
+        />
+        <Checkbox
+          checked={terms}
+          onChange={(e) => setTerms(e.target.checked)}
+          label="Accept terms & conditions"
+          required
+        />
+        <Error error={error} />
         <button
-          type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+          type="submit"
+          className="w-full bg-primary m-0 text-white py-2 rounded-xl"
         >
           {loading ? 'Registering...' : 'Register'}
         </button>
-        {error && <p className="text-red-500">{error.message}</p>}
+        <Link
+          href={'/login'}
+          className="w-full border border-primary text-primary py-2 rounded-xl text-center block mt-2 transition-colors hover:bg-primary hover:text-white"
+        >
+          Login
+        </Link>
       </form>
     </div>
   );
