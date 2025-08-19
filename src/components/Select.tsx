@@ -24,8 +24,13 @@ export function Select<T extends string>({
 }: SelectProps<T>) {
   return (
     <div>
-      {label && <label className="block mb-1">{label}</label>}
+      {label && (
+        <label htmlFor={name} className="block mb-1">
+          {label}
+        </label>
+      )}
       <select
+        id={name}
         value={value}
         onChange={onChange}
         className={`w-full p-2 border rounded ${error?.field === name ? 'border-red-600' : ''} ${className}`}
