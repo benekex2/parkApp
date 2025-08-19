@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Poppins } from 'next/font/google';
+import { Poppins, DM_Sans, Lato } from 'next/font/google';
 import './globals.css';
 import Providers from './providers';
 import { AuthProvider } from '@/context/AuthContext';
@@ -9,6 +9,19 @@ import { ErrorBoundary } from 'react-error-boundary';
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-dm-sans',
+});
+
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['100', '300', '400', '700', '900'],
+  variable: '--font-lato',
 });
 
 export const metadata: Metadata = {
@@ -23,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className}`}>
+      <body className={`${lato.variable} ${poppins.variable} ${dmSans.variable} font-lato`}>
         <Providers>
           <AuthProvider>
             <ErrorBoundary FallbackComponent={ErrorFallback}>{children}</ErrorBoundary>

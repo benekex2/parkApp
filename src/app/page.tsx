@@ -66,7 +66,7 @@ export default function Home() {
           >
             <ArrowLeftIcon />
           </button>
-          <h1 className="text-[2rem] leading-[2.5rem] font-bold pl-5 pt-1">
+          <h1 className="text-[2rem] font-poppins leading-[2.5rem] font-bold pl-5 pt-1">
             Otwórz <br /> bramę
           </h1>
         </div>
@@ -89,7 +89,9 @@ export default function Home() {
                   `}
                 style={{ zIndex: 1 }}
               >
-                <h2 className="font-bold text-2xl pb-10 pt-4">{pilots[current].name}</h2>
+                <h2 className="font-bold text-2xl font-dm-sans pb-10 pt-4">
+                  {pilots[current].name}
+                </h2>
                 <div className={`space-y-3 ${pilots[current].gates.length > 4 ? 'pr-4' : ''}`}>
                   {pilots[current].gates.map((gate) => (
                     <button
@@ -100,7 +102,7 @@ export default function Home() {
                     </button>
                   ))}
                 </div>
-                <p className="text-center mt-2">Wybierz bramę, by otworzyć</p>
+                <p className="text-center font-dm-sans mt-2">Wybierz bramę, by otworzyć</p>
               </div>
               {/* Następny pilot */}
               {anim && nextIdx !== null && (
@@ -122,7 +124,7 @@ export default function Home() {
                       </button>
                     ))}
                   </div>
-                  <p className="text-center mt-2">Wybierz bramę, by otworzyć</p>
+                  <p className="text-center font-dm-sans mt-2">Wybierz bramę, by otworzyć</p>
                 </div>
               )}
             </div>
