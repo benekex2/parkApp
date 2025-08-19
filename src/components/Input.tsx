@@ -1,19 +1,25 @@
 import React from 'react';
+import { ErrorType } from './Error';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: ErrorType;
 }
 
-export const Input: React.FC<InputProps> = ({ label, value, onChange, ...props }) => (
+export const Input: React.FC<InputProps> = ({ label, value, error, onChange, ...props }) => (
   <div className="w-full mb-2">
     {label && <label className={`block text-base`}>{label}</label>}
     <input
       type={props.type || 'text'}
       value={value}
       onChange={onChange}
-      className={`w-full text-base border border-secondary bg-white rounded-md p-2 mb-3 focus:ring-2 focus:ring-purple-500 outline-none`}
+      className={`w-full rounded-md border p-2 focus:outline-none ${
+        error?.field === props.name
+          ? `border-2 border-red-600 bg-red-100`
+          : 'border-secondary bg-white'
+      }`}
       {...props}
     />
   </div>

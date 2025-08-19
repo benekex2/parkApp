@@ -23,7 +23,10 @@ export default function RegisterPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateEmail(email)) {
-      setError('Please use correct formatting.\nExample: address@email.com');
+      setError({
+        message: 'Please use correct formatting.\nExample: address@email.com',
+        field: 'email',
+      });
       return;
     }
     setError(null);
@@ -38,9 +41,10 @@ export default function RegisterPage() {
         </div>
       </Header>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-2xl space-y-4">
-        <Input label="Name" onChange={(e) => setName(e.target.value)} />
+        <Input label="Name" name="name" onChange={(e) => setName(e.target.value)} />
         <InputEmail
           label="Email"
+          name="email"
           value={email}
           error={error}
           onChange={(e) => setEmail(e.target.value)}
@@ -48,12 +52,16 @@ export default function RegisterPage() {
         <Input
           label="Password"
           type="password"
+          name="password"
+          error={error}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <Select
           label="Language"
           value={language}
+          error={error}
+          name="language"
           options={Object.values(Language)}
           optionLabels={{ [Language.English]: 'English', [Language.Polish]: 'Polski' }}
           onChange={(e) => setLanguage(e.target.value as Language)}
@@ -62,6 +70,8 @@ export default function RegisterPage() {
           checked={terms}
           onChange={(e) => setTerms(e.target.checked)}
           label="Accept terms & conditions"
+          error={error}
+          name="terms"
           required
         />
         <Error error={error} />

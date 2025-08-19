@@ -1,10 +1,11 @@
 import React from 'react';
+import { ErrorType } from './Error';
 
 interface InputEmailProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  error?: string | null;
+  error?: ErrorType;
 }
 
 export const InputEmail: React.FC<InputEmailProps> = ({
@@ -21,7 +22,9 @@ export const InputEmail: React.FC<InputEmailProps> = ({
       value={value}
       onChange={onChange}
       className={`w-full rounded-md border p-2 focus:outline-none ${
-        error ? `border-2 border-red-600 bg-red-100` : 'border-secondary bg-white'
+        error?.field === props.name
+          ? `border-2 border-red-600 bg-red-100`
+          : 'border-secondary bg-white'
       }`}
       {...props}
     />

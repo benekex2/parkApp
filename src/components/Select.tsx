@@ -1,4 +1,5 @@
 import React from 'react';
+import { ErrorType } from './Error';
 
 interface SelectProps<T extends string> {
   label?: string;
@@ -7,6 +8,8 @@ interface SelectProps<T extends string> {
   optionLabels?: Record<T, string>;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   className?: string;
+  error?: ErrorType;
+  name?: string;
 }
 
 export function Select<T extends string>({
@@ -16,6 +19,8 @@ export function Select<T extends string>({
   optionLabels,
   onChange,
   className = '',
+  error,
+  name,
 }: SelectProps<T>) {
   return (
     <div>
@@ -23,7 +28,7 @@ export function Select<T extends string>({
       <select
         value={value}
         onChange={onChange}
-        className={`w-full p-2 border rounded ${className}`}
+        className={`w-full p-2 border rounded ${error?.field === name ? 'border-red-600' : ''} ${className}`}
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>
