@@ -3,6 +3,8 @@ import { Poppins } from 'next/font/google';
 import './globals.css';
 import Providers from './providers';
 import { AuthProvider } from '@/context/AuthContext';
+import { ErrorFallback } from '@/components/ErrorBoundary';
+import { ErrorBoundary } from 'react-error-boundary';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -23,7 +25,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.className}`}>
         <Providers>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>{children}</ErrorBoundary>
+          </AuthProvider>
         </Providers>
       </body>
     </html>
