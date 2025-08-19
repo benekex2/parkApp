@@ -20,9 +20,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   className = '',
   error,
 }) => (
-  <label className={`flex items-center space-x-2 ${className}`}>
+  <label htmlFor={name} className={`flex items-center space-x-2 ${className}`}>
     <input
       type="checkbox"
+      id={name}
       checked={checked}
       onChange={onChange}
       name={name}
