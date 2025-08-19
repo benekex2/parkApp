@@ -80,7 +80,6 @@ export default function Home() {
             onTouchEnd={handleTouchEnd}
           >
             <div className="relative">
-              {/* Aktualny pilot */}
               <div
                 className={`absolute top-0 left-0 w-full transition-all duration-250
                     ${anim === 'left' ? '-translate-x-full opacity-0' : ''}
@@ -96,7 +95,7 @@ export default function Home() {
                   {pilots[current].gates.map((gate) => (
                     <button
                       key={gate}
-                      className="w-full py-2 px-4 mb-4 rounded-lg border border-primary font-medium"
+                      className="w-full text-[17.25px] py-2 px-4 mb-4 rounded-lg border border-primary font-medium"
                     >
                       {gate}
                     </button>
@@ -104,7 +103,6 @@ export default function Home() {
                 </div>
                 <p className="text-center font-dm-sans mt-2">Wybierz bramę, by otworzyć</p>
               </div>
-              {/* Następny pilot */}
               {anim && nextIdx !== null && (
                 <div
                   className={`absolute top-0 left-0 w-full transition-all duration-250
