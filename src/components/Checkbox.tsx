@@ -1,4 +1,5 @@
 import React from 'react';
+import { ErrorType } from './Error';
 
 interface CheckboxProps {
   checked: boolean;
@@ -7,6 +8,7 @@ interface CheckboxProps {
   name?: string;
   required?: boolean;
   className?: string;
+  error?: ErrorType;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -16,6 +18,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   name,
   required = false,
   className = '',
+  error,
 }) => (
   <label className={`flex items-center space-x-2 ${className}`}>
     <input
@@ -24,8 +27,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       onChange={onChange}
       name={name}
       required={required}
-      className="accent-primary"
+      className={`accent-primary ${error?.field === name ? 'ring-2 ring-red-600 border-red-600' : ''}`}
     />
-    {label && <span>{label}</span>}
+    {label && <span className={`${error?.field === name ? 'text-red-600' : ''}`}>{label}</span>}
   </label>
 );

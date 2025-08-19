@@ -11,14 +11,15 @@ import {
 } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLoginUserMutation, useRegisterUserMutation, Language } from '@/graphql/generated';
+import { ErrorType } from '@/components/Error';
 
 interface AuthContextType {
   token: string | null;
-  error: string | null;
+  error: ErrorType;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  setError: Dispatch<SetStateAction<string | null>>;
+  setError: Dispatch<SetStateAction<ErrorType>>;
   register: (
     name: string,
     email: string,
@@ -34,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [loginUserMutation, { loading: loginLoading }] = useLoginUserMutation();
   const [registerUserMutation, { loading: registerLoading }] = useRegisterUserMutation();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ErrorType>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -53,10 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('auth-token', token);
         router.push('/');
       } else {
-        setError('Invalid login response');
+        setError({ message: 'Invalid email or password', field: 'query' });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError({ message: err instanceof Error ? err.message : String(err), field: 'query' });
     } finally {
       setLoading(false);
     }
@@ -77,10 +78,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (data?.registerUser?.status) {
         router.push('/login');
       } else {
-        setError('Registration failed');
+        setError({ message: 'Registration failed', field: 'query' });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError({ message: err instanceof Error ? err.message : String(err), field: 'query' });
     } finally {
       setLoading(false);
     }

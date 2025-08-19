@@ -17,7 +17,10 @@ export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateEmail(email)) {
-      setError('Please use correct formatting.\nExample: address@email.com');
+      setError({
+        message: 'Please use correct formatting.\nExample: address@email.com',
+        field: 'email',
+      });
       return;
     }
     setError(null);
@@ -34,6 +37,7 @@ export default function LoginPage() {
       <form className="bg-white p-6 rounded-2xl space-y-4" onSubmit={handleSubmit}>
         <InputEmail
           label="Email"
+          name="email"
           value={email}
           error={error}
           onChange={(e) => setEmail(e.target.value)}
@@ -41,6 +45,7 @@ export default function LoginPage() {
         <Input
           label="Password"
           type="password"
+          name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
