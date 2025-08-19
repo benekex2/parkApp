@@ -16,9 +16,14 @@ export const InputEmail: React.FC<InputEmailProps> = ({
   ...props
 }) => (
   <div className="w-full mb-2">
-    {label && <label className={`block text-base`}>{label}</label>}
+    {label && (
+      <label htmlFor={props.name} className={`block text-base`}>
+        {label}
+      </label>
+    )}
     <input
       type="text"
+      id={props.name}
       value={value}
       onChange={onChange}
       className={`w-full rounded-md border p-2 focus:outline-none ${
