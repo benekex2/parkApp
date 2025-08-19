@@ -47,9 +47,9 @@
     "lint-staged": "^15.2.2"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "**/*.{js,jsx,ts,tsx}": [
       "npm run lint",
-      "npm test -- --bail --findRelatedTests"
+      "npm run test"
     ]
   }
 }
